@@ -1,0 +1,61 @@
+---
+- name: "Install required build dependencies"
+  become: true
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    # - libcups2-dev
+    # - cmake
+    # - libcupsimage2-dev
+    - cups
+    - git
+# - name: Checkout the repository
+#   ansible.builtin.git:
+#     repo: 'https://github.com/pdewacht/brlaser.git'
+#     dest: /tmp/brlaser
+#     depth: 1
+#     update: no
+#     version: 'HEAD'
+# - name: Build the driver
+#   shell: "cmake . && make"
+#   args:
+#     chdir: /tmp/brlaser
+#     creates: /tmp/brlaser/brlaser.drv
+# - name: Install the driver
+#   become: true
+#   shell: make install
+#   args:
+#     chdir: /tmp/brlaser
+#     creates: /usr/share/cups/drv/brlaser.drv
+- name: Add pi user to lp and lpadmin groups
+  become: yes
+  user:
+    name: pi
+    groups: lp,lpadmin
+    append: yes
+- name: Make cups listen on all interfaces
+  become: yes
+  lineinfile:
+    path: /etc/cups/cupsd.conf
+    regexp: '^Listen .*:631'
+    line: 'Listen 0.0.0.0:631'
+- name: Allow regular access
+  become: yes
+  replace:
+    path: /etc/cups/cupsd.conf
+    regexp: '^<Location />\n(  Allow all\n)?'
+    replace: '<Location />\n  Allow all\n'
+- name: Allow admin access
+  become: yes
+  replace:
+    path: /etc/cups/cupsd.conf
+    regexp: '^<Location /admin>\n(  Allow all\n)?'
+    replace: '<Location /admin>\n  Allow all\n'
+- name: Enable cups
+  become: yes
+  tags: [systemd]
+  systemd:
+    name: cups
+    enabled: true
+    state: restarted

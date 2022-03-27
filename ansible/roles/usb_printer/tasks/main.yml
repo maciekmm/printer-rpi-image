@@ -1,0 +1,17 @@
+---
+- name: "Copy the parser script"
+  copy:
+    src: "{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: 0744
+  with_items:
+    - create-printer.sh
+    - parselpinfo.gawk
+- name: "Find potential candidates"
+  shell: "lpinfo --include-schemes usb -l -v | awk -f /tmp/parselpinfo.gawk"
+  register: printer_urls
+- name: "Register printers"
+  shell: "/tmp/create-printer.sh \"{{ item.uri }}\" \"{{ item.name }}\""
+  args:
+    executable: /bin/bash
+  loop: "{{ printer_urls.stdout }}"

@@ -1,0 +1,5 @@
+[printer]
+192.168.0.88 ansible_user=pi
+
+[printer:vars]
+ansible_python_interprater=/usr/bin/python3

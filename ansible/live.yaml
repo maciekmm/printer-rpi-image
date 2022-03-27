@@ -1,0 +1,7 @@
+---
+- name: "Configure USB printers in RAW"
+  hosts: [all]
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/sbin"
+  roles:
+    - role: usb_printer
