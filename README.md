@@ -6,3 +6,7 @@ This project configures and builds an ARMv6 RaspiOS image it to share local USB 
 
 - Vagrant
 - 
+
+## TODO
+
+- Resize the filesystem on live RPI

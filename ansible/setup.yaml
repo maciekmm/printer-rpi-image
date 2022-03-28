@@ -1,26 +1,25 @@
 ---
 - name: "Install necessary packages"
+  become: true
   hosts: all
   tags: [update-system]
   tasks:
-    - name: Update and upgrade apt packages
-      become: true
+    - name: Update apt packages
       apt:
         update_cache: yes
     - name: "Install vim"
-      become: true
       apt:
         name: vim
         state: present
-# - name: "Set hostname"
-#   hosts: all
-#   tags: [hostname]
-#   tasks:
-#     - name: Set hostname
-#       become: true
-#       hostname:
-#         use: debian
-#         name: pi-print-server
+- name: "Set hostname"
+  hosts: all
+  tags: [hostname,systemd]
+  tasks:
+    - name: Set hostname
+      become: true
+      hostname:
+        use: debian
+        name: pi-print-server
 - name: "Install and configure CUPS"
   hosts: all
   tags: [cups]

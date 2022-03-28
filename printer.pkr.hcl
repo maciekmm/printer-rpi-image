@@ -64,8 +64,9 @@ build {
       # The following arguments are required for running Ansible within a chroot
       # See https://www.packer.io/plugins/provisioners/ansible/ansible#chroot-communicator for details
       "--connection=chroot",
-      "--become-user=pi",
+      "--become-user=root",
       "--skip-tags=systemd",
+      "--user=pi",
       #  Ansible needs this to find the mount path
       "-e ansible_host=${build.MountPath}"
     ]

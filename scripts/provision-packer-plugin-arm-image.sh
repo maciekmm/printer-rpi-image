@@ -15,13 +15,9 @@ cd $GOPATH/src/github.com/solo-io/
 
 # clean up potential residual files from previous builds
 rm -rf packer-plugin-arm-image
-if [[ -z "${GIT_CLONE_URL}" ]]; then
-  cp -a /vagrant/packer-plugin-arm-image ./packer-plugin-arm-image
-else
-  git clone ${GIT_CLONE_URL} packer-plugin-arm-image
-fi
+cp -a /vagrant/packer-plugin-arm-image ./packer-plugin-arm-image
 cd packer-plugin-arm-image
-go build
+go build -buildvcs=false
 
 # Check if plugin built and copy into place
 if [[ ! -f packer-plugin-arm-image ]]; then
