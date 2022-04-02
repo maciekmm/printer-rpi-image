@@ -61,21 +61,21 @@ build {
       "PYTHONUNBUFFERED=1",
     ]
     extra_arguments = [
-      # The following arguments are required for running Ansible within a chroot
-      # See https://www.packer.io/plugins/provisioners/ansible/ansible#chroot-communicator for details
       "--connection=chroot",
       "--become-user=root",
+      # when we run in chroot we don't have access to systemd
       "--skip-tags=systemd",
       "--user=pi",
-      #  Ansible needs this to find the mount path
+      # Ansible needs this to find the mount path
       "-e ansible_host=${build.MountPath}"
     ]
   }
 
   provisioner "shell" {
     inline = [
+      "hostnamectl set-hostname pi-print-server"
       "systemctl enable ssh",
-      "systemctl enable cups"
+      "systemctl enable cups",
     ]
   }
 }

@@ -16,7 +16,9 @@ fi
 
 # register if it doesn't
 lpadmin -p "$target_name" \
+    -E \
     -v "$address" \
+    -m raw \
     -o printer-is-shared=true
 
-echo "printer registered successfully" >&2
+echo "printer registered successfully" >&2c
