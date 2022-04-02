@@ -54,6 +54,14 @@ build {
     ]
   }
 
+  # when we run in chroot we don't have access to dbus
+  # and we cannot run hostnamectl
+  provisioner "shell" {
+    inline = [
+      "echo 'pi-print-server' > /etc/hostname"
+    ]
+  }
+
   provisioner "ansible" {
     playbook_file = "/vagrant/ansible/setup.yaml"
     ansible_env_vars = [
@@ -63,19 +71,9 @@ build {
     extra_arguments = [
       "--connection=chroot",
       "--become-user=root",
-      # when we run in chroot we don't have access to systemd
-      "--skip-tags=systemd",
       "--user=pi",
       # Ansible needs this to find the mount path
       "-e ansible_host=${build.MountPath}"
-    ]
-  }
-
-  provisioner "shell" {
-    inline = [
-      "hostnamectl set-hostname pi-print-server"
-      "systemctl enable ssh",
-      "systemctl enable cups",
     ]
   }
 }

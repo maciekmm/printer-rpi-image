@@ -1,7 +1,45 @@
 ---
+- name: Upgrade the system
+  tasks:
+    - name: Update & upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: yes
 - name: "Configure USB printers in RAW"
   hosts: [all]
   environment:
     PATH: "{{ ansible_env.PATH }}:/usr/sbin"
   roles:
     - role: usb_printer
+- name: "Install and configure the firewall"
+  hosts: all
+  tags: [firewall]
+  tasks:
+    - name: Install iptables
+      become: true
+      apt:
+        name: iptables
+        state: present
+    - name: Install ufw
+      become: true
+      apt:
+        name: ufw
+        state: present
+    - name: Allow TCP 631 
+      become: true
+      community.general.ufw:
+        to_port: 631
+        proto: tcp
+        rule: allow
+        direction: in
+    - name: Allow TCP 22
+      become: true
+      community.general.ufw:
+        to_port: 22
+        proto: tcp
+        rule: allow
+        direction: in
+    - name: Enable UFW
+      become: true
+      community.general.ufw:
+        state: enabled

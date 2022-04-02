@@ -3,11 +3,13 @@ BEGIN {
 }
 
 /^Device: / {
+	OFS="="
 	no_printers++;
-	gsub(/^[ ]+/, "", $2);
-	current_printer = $2;
-	printers[$2] = ""
-	printer_opts[current_printer,"url"] = $2;
+	$1="";
+	gsub(/^=[ ]+/, "", $0);
+	current_printer = $0;
+	printers[$0] = ""
+	printer_opts[current_printer,"url"] = $0;
 }
 
 ! /Device: / {

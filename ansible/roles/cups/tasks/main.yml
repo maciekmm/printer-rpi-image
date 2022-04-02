@@ -1,33 +1,12 @@
 ---
-- name: "Install required build dependencies"
+- name: "Install required dependencies"
   become: true
   apt:
     name: "{{ item }}"
     state: present
   loop:
-    # - libcups2-dev
-    # - cmake
-    # - libcupsimage2-dev
     - cups
     - git
-# - name: Checkout the repository
-#   ansible.builtin.git:
-#     repo: 'https://github.com/pdewacht/brlaser.git'
-#     dest: /tmp/brlaser
-#     depth: 1
-#     update: no
-#     version: 'HEAD'
-# - name: Build the driver
-#   shell: "cmake . && make"
-#   args:
-#     chdir: /tmp/brlaser
-#     creates: /tmp/brlaser/brlaser.drv
-# - name: Install the driver
-#   become: true
-#   shell: make install
-#   args:
-#     chdir: /tmp/brlaser
-#     creates: /usr/share/cups/drv/brlaser.drv
 - name: Add pi user to lp and lpadmin groups
   become: yes
   user:
@@ -54,7 +33,6 @@
     replace: '<Location /admin>\n  Allow all\n'
 - name: Enable cups
   become: yes
-  tags: [systemd]
   systemd:
     name: cups
     enabled: true

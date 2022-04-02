@@ -1,0 +1,5 @@
+[pi-print-server]
+pi-print-server.local ansible_user=pi
+
+[pi-print-server:vars]
+ansible_python_interprater=/usr/bin/python3

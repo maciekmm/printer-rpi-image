@@ -2,7 +2,6 @@
 - name: "Install necessary packages"
   become: true
   hosts: all
-  tags: [update-system]
   tasks:
     - name: Update apt packages
       apt:
@@ -11,17 +10,18 @@
       apt:
         name: vim
         state: present
-- name: "Set hostname"
-  hosts: all
-  tags: [hostname,systemd]
-  tasks:
-    - name: Set hostname
-      become: true
-      hostname:
-        use: debian
-        name: pi-print-server
 - name: "Install and configure CUPS"
   hosts: all
   tags: [cups]
   roles:
     - role: cups
+- name: "Enable ssh"
+  hosts: all
+  tags: [systemd]
+  tasks:
+    - name: Enable ssh
+      become: true
+      systemd:
+        name: ssh
+        enabled: yes
+
